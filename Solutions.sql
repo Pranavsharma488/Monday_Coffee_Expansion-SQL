@@ -96,34 +96,34 @@ ORDER BY 2 DESC
 -- Provide a list of cities along with their populations and estimated coffee consumers.
 -- return city_name, total current cx, estimated coffee consumers (25%)
 
-WITH city_table as 
+with city_table  as 
 (
-	SELECT 
-		city_name,
-		ROUND((population * 0.25)/1000000, 2) as coffee_consumers
-	FROM city
+   select  
+       city_name , 
+	   Round ((population * 0.25) / 1000000, 2) as Coffee_Consumer_in_Million
+    from city
 ),
-customers_table
-AS
+
+customer_table 
+as 
 (
-	SELECT 
-		ci.city_name,
-		COUNT(DISTINCT c.customer_id) as unique_cx
-	FROM sales as s
-	JOIN customers as c
-	ON c.customer_id = s.customer_id
-	JOIN city as ci
-	ON ci.city_id = c.city_id
-	GROUP BY 1
+     select 
+	      ci.city_name ,
+	      count(distinct c.customer_id) as Unique_cx
+       from city ci
+       join customers c
+       on c.city_id = ci.city_id
+       group by city_name 
 )
-SELECT 
-	customers_table.city_name,
-	city_table.coffee_consumers as coffee_consumer_in_millions,
-	customers_table.unique_cx
-FROM city_table
-JOIN 
-customers_table
-ON city_table.city_name = customers_table.city_name
+
+select 
+      city_table.city_name,
+	  city_table.Coffee_Consumer_in_Million,
+	  customer_table.Unique_cx
+from city_table 
+join
+customer_table 
+on city_table.city_name = customer_table.city_name
 
 
 
